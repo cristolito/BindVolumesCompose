@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  database:
+    container_name: maria-db
+    image: mariadb:jammy
+    ports:
+      - 3306:3306
+    volumes:
+      - world-db:/var/lib/mysql
+    environment:
+      - MARIADB_USER=user1
+      - MARIADB_PASSWORD=user-password
+      - MARIADB_ROOT_PASSWORD=root-secret-password
+      - MARIADB_DATABASE=world-db
+
+  phpmyadmin:
+    depends_on:
+      - database
+    container_name: phpmyadmin-MDB
+    image: phpmyadmin:5.2.1-apache
+    ports:
+      - 8080:80
+    volumes:
+      - ./phpmyadmin-MDB:/var/lib/mysql
+    environment:
+      - PMA_ARBITRARY=1
+
+volumes:
+  world-db:
+    external: true
